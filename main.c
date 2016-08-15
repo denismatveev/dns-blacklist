@@ -74,23 +74,26 @@ int main(int argc, char *argv[])
       perror(config_file);
       exit(1);
     }
-/*
+
   if((cfg=parse_config(fp)) == NULL)
     return 1;
 
   remove_config(cfg);
-*/
 
+/*
   blist b;
   b=blist_init();
+  char ab[3]="aaa";
   blist_add_to(b,"aaa");
+  blist_add_to(b,"ddd");
   blist_add_to(b,"aaa");
+  blist_add_to(b,"ccc");
   blist_add_to(b,"ccc");
   size_t i=0;
   for(i=0;i < b->q;i++)
     printf("%s\n",(b->array[i])->value);
   blist_delete(b);
-
+*/
 
 
   return 0;

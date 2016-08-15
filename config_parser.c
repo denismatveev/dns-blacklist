@@ -1,4 +1,5 @@
 #include"config_parser.h"
+#include"blist.h"
 #include <arpa/inet.h>
 #define INIT_SIZE 1024
 #define IPLEN 16
@@ -63,8 +64,6 @@ config parse_config(FILE* f)
                 strncpy(cfg->forward,getstr,IPLEN);
                 break;
               }
-            else
-              break;
           }
       if(!(strcmp(getstr,"[blacklist]")))
         {
@@ -78,10 +77,9 @@ config parse_config(FILE* f)
                   fseek(f,curpos,SEEK_SET);
                   break;
                 }
-              if(getstrlen == 0)
-                break;
-              if((blist_add_to(blacklist,getstr)))
-                break;
+              if(getstrlen)
+                if((blist_add_to(blacklist,getstr)) == -1)
+                  return NULL;
 
             }
         }

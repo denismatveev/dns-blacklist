@@ -1,6 +1,7 @@
 #include"blist.h"
 #define ALLOC_ERROR -1
 #define INIT_SIZE 1024
+#include"stdio.h"
 /* disclaimer */
 /* my simple iplementation of black list using an array,qsort and bsearch */
 /* it hasn't size limitation */
@@ -24,11 +25,13 @@ blist blist_init(void)
 
 int mycmp(const void* a,const void* b)
 {
-  int z=strcasecmp(((blist_t)a)->value,((blist_t)b)->value);
-  return z;
+  blist_t x,y;
+  x=*(blist_t*)a;
+  y=*(blist_t*)b;
+  return strcasecmp(x->value,y->value);
 }
 
-int blist_add_to(blist bl,char* s)
+int blist_add_to(blist bl,const char* s)
 {
   blist_t blt, *newptr;
 
@@ -39,18 +42,18 @@ int blist_add_to(blist bl,char* s)
 
 
   // search if element already is in the list
-  //printf("a=%s\nb=%s\n",&blt->value,bl->array->value);
+
   strncpy(blt->value,s,INIT_SIZE);
-  if(((bsearch(&blt,bl->array,bl->q,sizeof(blist_t),mycmp)) != NULL))
+
+
+
+
+  if((bsearch(&blt,bl->array,bl->q,sizeof(blist_t),mycmp)) != NULL)
     {
       free(blt);
       free(blt->value);
       return 0;// if not found
     }
-
-
-  if(bl->capacity == 0)
-    return -2;
 
   if(bl->q < bl->capacity)
     {
@@ -76,13 +79,13 @@ int blist_add_to(blist bl,char* s)
 
 }
 
-int blist_check(blist bl,char* str)
+int blist_check(blist bl,const char* str)
 {
 
   // dynamically creates an element
   blist_t b;
   int ret;
-  if((b=(blist_t)malloc(sizeof(struct _blist_t))) == NULL)
+  if((b=(blist_t)malloc(sizeof(_blist_t))) == NULL)
     return ALLOC_ERROR;
 
   if((b->value=(char*)calloc(INIT_SIZE,sizeof(char))) == NULL)

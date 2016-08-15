@@ -1,0 +1,10 @@
+[blacklist]
+
+ya.ru
+google.com
+ya.ru
+
+[forward]
+
+8.8.8.8
+

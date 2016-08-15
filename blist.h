@@ -4,12 +4,12 @@
 #include<string.h>
 #include<stdio.h>
 
-typedef struct _blist_t {
+typedef struct _blist_t{
    char *value;
 } _blist_t;
 typedef _blist_t* blist_t;
 
-typedef struct{
+typedef struct _blist{
   blist_t* array;
   size_t capacity;
   size_t q; // current number of elements
@@ -18,8 +18,8 @@ typedef struct{
 typedef _blist* blist;
 
 blist blist_init(void); // return pointer to the first element
-int blist_add_to(blist,char*);
-int blist_check(blist,char*);
+int blist_add_to(blist,const char*);
+int blist_check(blist,const char*);
 void blist_delete(blist);
 
 
