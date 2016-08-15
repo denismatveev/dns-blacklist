@@ -1,7 +1,9 @@
+#include"config_parser.h"
+#include"blist.h"
 #include <stdio.h>
 #include<stdlib.h>
 #include<getopt.h>
-#include"blist.h"
+
 
 /*
  * Написать DNS прокси-сервер с поддержкой "черного" списка доменных имен.
@@ -19,21 +21,19 @@
 */
 
 
-int config_parser(char**, FILE*);
-
-
-
 int main(int argc, char *argv[])
 {
 
   char *help_message;
   char* config_file;
+  config cfg;
+  FILE *fp;
 
   help_message="Usage: %s -c <path to config file> - Start dns proxy with config file.\n"
                "\t\t-h\t\t\t - Print help message and exit.\n";
   char *program_name=argv[0];
   char oc;
-/*
+
   if(argc < 2)
     {
       fprintf(stderr, help_message, program_name);
@@ -67,20 +67,29 @@ int main(int argc, char *argv[])
       exit(EXIT_FAILURE);
     }
 
+
+
+  if((fp=fopen(config_file,"r")) == NULL)
+    {
+      perror(config_file);
+      exit(1);
+    }
+/*
+  if((cfg=parse_config(fp)) == NULL)
+    return 1;
+
+  remove_config(cfg);
 */
 
-blist m;
-m=blist_init();
-
-blist_add_to(m,"aaa");
-blist_add_to(m,"bbb");
-blist_add_to(m,"aaa");
-blist_add_to(m,"ccc");
-int i=0;
-for(i=0;i < m->q;i++)
-  printf("%s\n",(m->array[i])->value);
-
-blist_delete(m);
+  blist b;
+  b=blist_init();
+  blist_add_to(b,"aaa");
+  blist_add_to(b,"aaa");
+  blist_add_to(b,"ccc");
+  size_t i=0;
+  for(i=0;i < b->q;i++)
+    printf("%s\n",(b->array[i])->value);
+  blist_delete(b);
 
 
 

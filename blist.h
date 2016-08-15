@@ -9,7 +9,7 @@ typedef struct _blist_t {
 } _blist_t;
 typedef _blist_t* blist_t;
 
-typedef struct {
+typedef struct{
   blist_t* array;
   size_t capacity;
   size_t q; // current number of elements

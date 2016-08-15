@@ -1,7 +1,11 @@
 #include"blist.h"
 #define ALLOC_ERROR -1
 #define INIT_SIZE 1024
-// my simple iplementation of black list using an array
+/* disclaimer */
+/* my simple iplementation of black list using an array,qsort and bsearch */
+/* it hasn't size limitation */
+/* if allocation memory has been occured the program fails */
+/* disson@yandex.ru */
 
 
 blist blist_init(void)
@@ -21,68 +25,78 @@ blist blist_init(void)
 int mycmp(const void* a,const void* b)
 {
   int z=strcasecmp(((blist_t)a)->value,((blist_t)b)->value);
-
-  //printf("a=%s,b=%s\n",((blist_t)a)->value,((blist_t)b)->value);
-  //return strcasecmp(((blist_t)a)->value,((blist_t)b)->value);
   return z;
 }
 
-int blist_add_to(blist a,char* s)
+int blist_add_to(blist bl,char* s)
 {
-  blist_t b;
+  blist_t blt, *newptr;
 
-  if((b=(blist_t)malloc(sizeof(_blist_t))) == NULL)
+  if((blt=(blist_t)malloc(sizeof(_blist_t))) == NULL)
     return ALLOC_ERROR;
-  b->value=s;
+  if((blt->value=(char*)calloc(INIT_SIZE,sizeof(char))) == NULL)
+    return ALLOC_ERROR;
+
 
   // search if element already is in the list
-  if((bsearch(&b,a->array,a->q,sizeof(blist_t),mycmp)) != NULL)
+  //printf("a=%s\nb=%s\n",&blt->value,bl->array->value);
+  strncpy(blt->value,s,INIT_SIZE);
+  if(((bsearch(&blt,bl->array,bl->q,sizeof(blist_t),mycmp)) != NULL))
     {
-      free(b);
-      return 2;// if not found
+      free(blt);
+      free(blt->value);
+      return 0;// if not found
     }
 
-  if(a->capacity == 0)
-    return -2;
-  if(a->array == NULL)
-    *(a->array)=b;
-  else
-    if(a->q < a->capacity)
-      *(a->array+a->q++)=b;
-    else
-      {
-        blist_t newptr;
-        if((newptr=realloc(a->array,sizeof(blist_t)+INIT_SIZE)) == NULL)
-          return ALLOC_ERROR;
-        *(a->array+a->q++)=b;
-        a->capacity+=INIT_SIZE;
-      }
 
+  if(bl->capacity == 0)
+    return -2;
+
+  if(bl->q < bl->capacity)
+    {
+      *(bl->array+bl->q)=blt;
+      bl->q++;
+    }
+  else
+    {
+      if((newptr=(blist_t*)realloc(bl->array,sizeof(blist_t)*(bl->capacity+INIT_SIZE))) == NULL)
+        return ALLOC_ERROR;
+      bl->array=newptr;
+      *(bl->array+bl->q)=blt;
+      bl->q++;
+      bl->capacity+=INIT_SIZE;
+    }
 
   //sort
 
-  qsort(a->array,a->q,sizeof(blist_t),mycmp);
+  qsort(bl->array,bl->q,sizeof(blist_t),mycmp);
 
   return 0;
 
 
 }
 
-int blist_check(blist bl,char*str)
+int blist_check(blist bl,char* str)
 {
 
   // dynamically creates an element
   blist_t b;
+  int ret;
   if((b=(blist_t)malloc(sizeof(struct _blist_t))) == NULL)
     return ALLOC_ERROR;
-  b->value=str;
+
+  if((b->value=(char*)calloc(INIT_SIZE,sizeof(char))) == NULL)
+    return ALLOC_ERROR;
+  strncpy(b->value,str,INIT_SIZE);
+
   //binary search
-  int ret;
+
   if((bsearch(&b,bl->array,bl->q,sizeof(blist_t),mycmp)) != NULL)
     ret=0;//found
   else
-    ret=1; //no found
+    ret=1; //not found
   free(b);
+  free(b->value);
   return ret;
 }
 
