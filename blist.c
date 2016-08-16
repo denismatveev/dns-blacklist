@@ -1,6 +1,4 @@
 #include"blist.h"
-#define ALLOC_ERROR -1
-#define INIT_SIZE 1024
 #include"stdio.h"
 /* disclaimer */
 /* my simple iplementation of black list using an array,qsort and bsearch */
@@ -14,7 +12,7 @@ blist blist_init(void)
   blist a;
   if((a=(blist)malloc(sizeof(_blist))) == NULL)
     return NULL;
-  if((a->array=(blist_t*)calloc(INIT_SIZE,sizeof(blist_t))) == NULL)
+  if((a->array=(blist_t*)calloc(STR_SIZE,sizeof(blist_t))) == NULL)
     return NULL;
   a->capacity=INIT_SIZE;
   a->q=0; // current number of elements
@@ -35,20 +33,17 @@ int blist_add_to(blist bl,const char* s)
 {
   blist_t blt, *newptr;
 
-  if((blt=(blist_t)malloc(sizeof(_blist_t))) == NULL)
+  if(!(blt=(blist_t)malloc(sizeof(_blist_t))))
     return ALLOC_ERROR;
-  if((blt->value=(char*)calloc(INIT_SIZE,sizeof(char))) == NULL)
+  if(!(blt->value=(char*)calloc(STR_SIZE,sizeof(char))))
     return ALLOC_ERROR;
 
 
   // search if element already is in the list
 
-  strncpy(blt->value,s,INIT_SIZE);
+  strncpy(blt->value,s,STR_SIZE);
 
-
-
-
-  if((bsearch(&blt,bl->array,bl->q,sizeof(blist_t),mycmp)) != NULL)
+  if((bsearch(&blt,bl->array,bl->q,sizeof(blist_t),mycmp)))
     {
       free(blt);
       free(blt->value);
@@ -62,14 +57,16 @@ int blist_add_to(blist bl,const char* s)
     }
   else
     {
-      if((newptr=(blist_t*)realloc(bl->array,sizeof(blist_t)*(bl->capacity+INIT_SIZE))) == NULL)
+      if(!(newptr=(blist_t*)realloc(bl->array,sizeof(blist_t)*(bl->capacity+INIT_SIZE))))
         return ALLOC_ERROR;
-      bl->array=newptr;
-      *(bl->array+bl->q)=blt;
-      bl->q++;
-      bl->capacity+=INIT_SIZE;
+      else
+        {
+          bl->array=newptr;
+          *(bl->array+bl->q)=blt;
+          bl->q++;
+          bl->capacity+=INIT_SIZE;
+        }
     }
-
   //sort
 
   qsort(bl->array,bl->q,sizeof(blist_t),mycmp);
@@ -88,9 +85,9 @@ int blist_check(blist bl,const char* str)
   if((b=(blist_t)malloc(sizeof(_blist_t))) == NULL)
     return ALLOC_ERROR;
 
-  if((b->value=(char*)calloc(INIT_SIZE,sizeof(char))) == NULL)
+  if((b->value=(char*)calloc(STR_SIZE,sizeof(char))) == NULL)
     return ALLOC_ERROR;
-  strncpy(b->value,str,INIT_SIZE);
+  strncpy(b->value,str,STR_SIZE);
 
   //binary search
 

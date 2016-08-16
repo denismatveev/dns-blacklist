@@ -1,13 +1,12 @@
 #include"config_parser.h"
 #include"blist.h"
 #include <arpa/inet.h>
-#define INIT_SIZE 1024
-#define IPLEN 16
+
 /*  disclaimer
 My the simpliest config parser
-this parser does not check if domain is valid
+this parser does not check if domain(i.e. aaa.tld) is valid
 if allocation memory has been occured the program fails
-There is no if ip address is valid
+
 disson@yandex.ru
 
 */
@@ -37,26 +36,26 @@ config parse_config(FILE* f)
   size_t getstrlen;
 
 
-  if((cfg=(config)malloc(sizeof(struct __config))) == NULL)
+  if(!(cfg=(config)malloc(sizeof(struct __config))))
     return NULL;
-  if((cfg->forward=(char*)calloc(IPLEN,sizeof(char))) == NULL)
+  if(!(cfg->forward=(char*)calloc(IPLEN,sizeof(char))))
     return NULL;
 
   blacklist=blist_init();
   cfg->blacklist=blacklist;
 
-  if((getstr=(char*)calloc(INIT_SIZE,sizeof(char))) == NULL)
+  if(!(getstr=(char*)calloc(STR_SIZE,sizeof(char))))
     return NULL;
 
 
 
 
-  while((fgets(getstr,INIT_SIZE,f)) != NULL)
+  while((fgets(getstr,STR_SIZE,f)))
     {
       getstrlen=remove_LF(getstr);
 
       if(!(strcmp(getstr,"[forward]")))
-        while((fgets(getstr,INIT_SIZE,f)) != NULL)
+        while((fgets(getstr,STR_SIZE,f)))
           {
             getstrlen=remove_LF(getstr);
             if(!check_if_ip_valid(getstr))
@@ -68,7 +67,7 @@ config parse_config(FILE* f)
       if(!(strcmp(getstr,"[blacklist]")))
         {
           curpos = ftell(f);
-          while((fgets(getstr,INIT_SIZE,f)) != NULL)
+          while((fgets(getstr,STR_SIZE,f)))
             {
               getstrlen=remove_LF(getstr);
 

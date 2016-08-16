@@ -1,8 +1,11 @@
 #include"config_parser.h"
+#include"dnsproxy.h"
 #include"blist.h"
 #include <stdio.h>
 #include<stdlib.h>
-#include<getopt.h>
+#include<unistd.h>
+
+
 
 
 /*
@@ -24,8 +27,13 @@
 int main(int argc, char *argv[])
 {
 
+  /* For config and its parsing */
+
+  int remote_tcp = 1,fd;
   char *help_message;
   char* config_file;
+  char remote_addr[16];
+  unsigned short local_port = 53, remote_port = 53;
   config cfg;
   FILE *fp;
 
@@ -33,7 +41,7 @@ int main(int argc, char *argv[])
                "\t\t-h\t\t\t - Print help message and exit.\n";
   char *program_name=argv[0];
   char oc;
-
+  /*------------------------------*/
   if(argc < 2)
     {
       fprintf(stderr, help_message, program_name);
@@ -78,23 +86,38 @@ int main(int argc, char *argv[])
   if((cfg=parse_config(fp)) == NULL)
     return 1;
 
+  remote_addr=cfg->forward;
+
+
+  pid_t pid = fork();
+  if(pid < 0) {
+      perror("fork");
+      return -1;
+    }
+  if(pid != 0)
+    exit(0);
+  pid = setsid();
+  if(pid < -1) {
+      perror("setsid");
+      return -1;
+    }
+  chdir("/");
+  fd = open ("/dev/null", O_RDWR, 0);
+  if(fd != -1) {
+      dup2 (fd, 0);
+      dup2 (fd, 1);
+      dup2 (fd, 2);
+      if(fd > 2)
+        close (fd);
+    }
+  umask(0);
+
+  signal(SIGPIPE, SIG_IGN); // signal - ANSI C signal handling,SIG_IGN - the signal is ignored. SIGPIPE - Broken pipe: write to pipe with no readers(if TCP connection fails);
+
+  dnsproxy(local_port, remote_addr, remote_port, remote_tcp);
+
   remove_config(cfg);
 
-/*
-  blist b;
-  b=blist_init();
-  char ab[3]="aaa";
-  blist_add_to(b,"aaa");
-  blist_add_to(b,"ddd");
-  blist_add_to(b,"aaa");
-  blist_add_to(b,"ccc");
-  blist_add_to(b,"ccc");
-  size_t i=0;
-  for(i=0;i < b->q;i++)
-    printf("%s\n",(b->array[i])->value);
-  blist_delete(b);
-*/
-
-
   return 0;
+
 }

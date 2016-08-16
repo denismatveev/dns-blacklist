@@ -3,7 +3,9 @@
 #include<stdlib.h>
 #include<string.h>
 #include<stdio.h>
-
+#define INIT_SIZE 1024
+#define STR_SIZE 1024
+#define ALLOC_ERROR -1
 typedef struct _blist_t{
    char *value;
 } _blist_t;
