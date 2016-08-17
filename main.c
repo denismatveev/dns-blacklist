@@ -3,7 +3,7 @@
 #include"blist.h"
 #include <stdio.h>
 #include<stdlib.h>
-#include<unistd.h>
+#include<getopt.h>
 
 
 
@@ -29,11 +29,10 @@ int main(int argc, char *argv[])
 
   /* For config and its parsing */
 
-  int remote_tcp = 1,fd;
+  int fd;
   char *help_message;
   char* config_file;
-  char remote_addr[16];
-  unsigned short local_port = 53, remote_port = 53;
+
   config cfg;
   FILE *fp;
 
@@ -41,7 +40,7 @@ int main(int argc, char *argv[])
                "\t\t-h\t\t\t - Print help message and exit.\n";
   char *program_name=argv[0];
   char oc;
-  /*------------------------------*/
+
   if(argc < 2)
     {
       fprintf(stderr, help_message, program_name);
@@ -86,9 +85,7 @@ int main(int argc, char *argv[])
   if((cfg=parse_config(fp)) == NULL)
     return 1;
 
-  remote_addr=cfg->forward;
-
-
+/*
   pid_t pid = fork();
   if(pid < 0) {
       perror("fork");
@@ -113,8 +110,8 @@ int main(int argc, char *argv[])
   umask(0);
 
   signal(SIGPIPE, SIG_IGN); // signal - ANSI C signal handling,SIG_IGN - the signal is ignored. SIGPIPE - Broken pipe: write to pipe with no readers(if TCP connection fails);
-
-  dnsproxy(local_port, remote_addr, remote_port, remote_tcp);
+*/
+  dnsproxy(cfg->forward);
 
   remove_config(cfg);
 
