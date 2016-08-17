@@ -455,7 +455,7 @@ int main(int argc, char* argv[])
   int transport_timeout = 5;
   const char *hosts_file = NULL;
   char *remote_addr;
-  unsigned short local_port = 5353, remote_port = 53;
+  unsigned short local_port = 53, remote_port = 53;
 
   char *help_message;
   char* config_file;
