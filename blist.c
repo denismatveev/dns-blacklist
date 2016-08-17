@@ -92,9 +92,9 @@ int blist_check(blist bl,const char* str)
   //binary search
 
   if((bsearch(&b,bl->array,bl->q,sizeof(blist_t),mycmp)) != NULL)
-    ret=0;//found
+    ret=1;//found
   else
-    ret=1; //not found
+    ret=0; //not found
   free(b);
   free(b->value);
   return ret;
