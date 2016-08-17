@@ -1,4 +1,3 @@
-
 #include "dnsproxy.h"
 
 static struct {

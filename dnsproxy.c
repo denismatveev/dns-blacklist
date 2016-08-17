@@ -194,8 +194,12 @@ static void process_query(PROXY_ENGINE *engine)
         sendto(ldns->sock, rbuffer, sizeof(DNS_HDR), 0, (struct sockaddr*)&source, sizeof(struct sockaddr_in));
     }
   else
-    //TODO set rcode!!! i.e.2(SERVFAIL) or 5 (refused)
+    //set rcode!!! i.e.2(SERVFAIL) or 5 (refused)
+    {
+      rhdr->rcode = 5;
     sendto(ldns->sock, rbuffer, sizeof(DNS_HDR), 0, (struct sockaddr*)&source, sizeof(struct sockaddr_in));
+
+    }
 }
 
 static void process_response(char* buffer, int size)
