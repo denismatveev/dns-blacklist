@@ -3,7 +3,7 @@
 /* disclaimer */
 /* my simple iplementation of black list using an array,qsort and bsearch */
 /* it hasn't size limitation */
-/* if allocation memory has been occured the program fails */
+/* if allocation memory error has been occured the program fails */
 /* disson@yandex.ru */
 
 
