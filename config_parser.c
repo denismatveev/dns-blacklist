@@ -5,7 +5,7 @@
 /*  disclaimer
 My the simpliest config parser
 this parser does not check if domain(i.e. aaa.tld) is valid
-if allocation memory has been occured the program fails
+if an error occured during the allocating memory the program fails
 
 disson@yandex.ru
 
