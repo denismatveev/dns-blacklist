@@ -1,7 +1,7 @@
 #include"blist.h"
 #include"stdio.h"
 /* disclaimer */
-/* my simple iplementation of black list using an array,qsort and bsearch */
+/* my simple implementation of black list using an array, qsort and bsearch */
 /* it hasn't size limitation */
 /* if allocation memory error has been occured the program fails */
 /* disson@yandex.ru */

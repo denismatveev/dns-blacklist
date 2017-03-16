@@ -1,6 +1,7 @@
 #include"dnsproxy.h"
 #include"config_parser.h"
 #include"blist.h"
+//TODO if searching domain is in the blacklist send response with ip taken from config
 
 
 #define PACKAGE_SIZE 8192
@@ -196,6 +197,7 @@ static void process_query(PROXY_ENGINE *engine)
   else
     //set rcode!!! i.e.2(SERVFAIL) or 5 (refused)
     {
+
       rhdr->rcode = 5;
     sendto(ldns->sock, rbuffer, sizeof(DNS_HDR), 0, (struct sockaddr*)&source, sizeof(struct sockaddr_in));
 

@@ -1,0 +1,5 @@
+project(blist_dns_proxy)
+cmake_minimum_required(VERSION 2.8)
+aux_source_directory(. SRC_LIST)
+aux_source_directory(embed EMBED_LIST)
+add_executable(${PROJECT_NAME} ${SRC_LIST} ${EMBED_LIST})
